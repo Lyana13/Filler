@@ -4,44 +4,46 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "./libft/libft.h"
 
 #ifndef FILLER_H
 # define FILLER_H
 
-# include "libft.h"
-# include "get_next_line.h"
+# include "libft/libft.h"
 
-typedef struct s_point
+typedef struct s_area
 {
-	int 		x;
-	int 		y;
-}				t_point;
+	char	symbol;
+	int		 weight;
+}				t_area;
 
-typedef struct s_players
-{
-	int 		name;
-	t_point 	start;
-}				t_player;
+typedef struct s_position
+{	
+	int			x;
+	int			y;
+	int			figure_weight;
+}				t_position;
 
-typedef struct s_token
+typedef struct s_figures
 {
-	int 		width;
-	int 		height;
-	int        	size;
-	char 		**data;
-}				t_token;
+	char		*view;
+	int 		col;
+	int 		row;
+}				t_figures;
+
+typedef struct s_maps
+{
+	t_area		*area;
+	int 		col;
+	int 		row;
+}				t_maps;
 
 typedef struct s_filler
 {
-	int			initialize;
-	t_player    player1;
-	t_player	player2;
-	t_point		target;
-	t_token		board;
-	t_token		token;
-	t_point		*buff_f;
-	int 			f_count;
-	t_point 	*buff_t;
-	ini 			t_count;
+	char		my_player;
+	char		enemy_player;
+	t_maps		map;
+	t_figures	figure;
+	FILE 		*fptr;
 }					t_filler;
+
+#endif
