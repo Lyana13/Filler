@@ -10,11 +10,11 @@
 
 # include "libft/libft.h"
 
-typedef struct s_area
+typedef struct s_cell
 {
 	char	symbol;
 	int		 weight;
-}				t_area;
+}				t_cell;
 
 typedef struct s_position
 {	
@@ -23,27 +23,26 @@ typedef struct s_position
 	int			figure_weight;
 }				t_position;
 
-typedef struct s_figures
+typedef struct s_figure
 {
 	char		*view;
-	int 		col;
-	int 		row;
-}				t_figures;
+	int 		columns;
+	int 		rows;
+}				t_figure;
 
-typedef struct s_maps
+typedef struct s_board
 {
-	t_area		*area;
-	int 		col;
-	int 		row;
-}				t_maps;
+	t_cell		*cells;
+	int 		columns;
+	int 		rows;
+}				t_board;
 
 typedef struct s_filler
 {
 	char		my_player;
 	char		enemy_player;
-	t_maps		map;
-	t_figures	figure;
-	FILE 		*fptr;
+	t_board		board;
+	t_figure	figure;
 }					t_filler;
 
 #endif

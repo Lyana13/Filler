@@ -19,7 +19,7 @@ char	*ft_strchr(const char *s, int c)
 	sp = (char*)s;
 	while (*sp != c && *sp)
 		sp++;
-	if (*sp != c)
+	if (*sp == '\0')
 		sp = 0;
 	return (sp);
 }
