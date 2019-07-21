@@ -31,30 +31,70 @@ void	create_board(char *str, t_filler *state)
 		state->board.columns) * sizeof(t_cell));
 }
 
-void fill_board(t_filler *state)
+void fill_board(t_board *board)
 {
-	int count;
+	int col_num;
 	int i;
-	int j;
+	int row_num;
 	char 		*str;
 
 	get_next_line(0, &str);
 	free(str);
 	i = 0;
-	j = 0;
-	while (j < state->board.rows)
+	row_num = 0;
+	while (row_num < board->rows)
 	{
-		count = 4;
+		col_num = 4;
 		get_next_line(0, &str);
-		while (count < state->board.columns + 4)
-		{
-			state->board.cells[i].symbol = str[count];
-			i++;
-			count++;
-		}
-		//free(str);
-		j++;
+		while (col_num < board->columns + 4)
+			 board->cells[i++].symbol = str[col_num++];
+		free(str);
+		row_num++;
 	}
+}
+
+void trim_figure(t_figure *figure)
+{
+	int r;
+	int c;
+
+	r = figure->rows;
+	c = figure->columns - 1;
+	while (c > 0 && r == figure->rows)
+	{
+		r = 0;
+		while(r < figure->rows)
+			if(figure->view[r++ * figure->columns + c] != '*')
+				break ;
+	}
+	figure->columns_1 = c + 1;
+}
+
+void	fill_figure(t_figure *figure)
+{
+	int col_num;
+	int row_num;
+	char *str;
+
+	get_next_line(0, &str);
+	parse_size(str, &(figure->rows), &(figure->columns));
+	free(str);
+	row_num = 0;
+	figure->view = (char *)malloc((figure->rows * figure->columns) *
+		sizeof(char));
+	while (row_num < figure->rows)
+	{
+		get_next_line(0, &str);
+		col_num = 0;
+		while (col_num < figure->columns)
+		{
+			figure->view[row_num * figure->columns + col_num] = str[col_num];
+			col_num++;
+		}
+		free(str);
+		row_num++;
+	}
+	trim_figure(figure);
 }
 
 int main(int argc, char **argv)
@@ -74,14 +114,21 @@ int main(int argc, char **argv)
 	 	if (state.board.cells == NULL)
 			create_board(str, &state);
 	 	free(str);	
-	 	fill_board(&state);
+	 	fill_board(&(state.board));
+	 	fill_figure(&(state.figure));
 	 	while(i < state.board.rows * state.board.columns){
 	 		fprintf(fptr, "%c", state.board.cells[i].symbol);
 	 	i++;
 	 	}
-	 	//fprintf(fptr, "%s\n", str);
+	 	fprintf(fptr, "\n\n");
+	 	i = 0;
+	 	while(i < state.figure.rows * state.figure.columns){
+	 		fprintf(fptr, "%c", state.figure.view[i]);
+	 	i++;
+	 	}
+	 	free(state.figure.view);
 	}
-	fprintf(fptr, "roww:%d, col: %d, dol: %c\n", state.board.rows, state.board.columns, state.board.cells[i].symbol);
+	fprintf(fptr, "row:%d, col: %d, dol: %c\n", state.board.rows, state.board.columns, state.board.cells[i].symbol);
 	//free(str);
 	fclose(fptr);
 	return (0);

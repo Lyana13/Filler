@@ -28,6 +28,8 @@ typedef struct s_figure
 	char		*view;
 	int 		columns;
 	int 		rows;
+	int 		columns_1;
+	int 		rows_1;
 }				t_figure;
 
 typedef struct s_board
