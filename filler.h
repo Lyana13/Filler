@@ -47,4 +47,9 @@ typedef struct s_filler
 	t_figure	figure;
 }					t_filler;
 
+void    parse_figure(t_figure *figure);
+void    parse_board(t_board *board);
+void    parse_size(char *str, int *rows, int *cols);
+void	find_weight_maps(t_filler *board);
+
 #endif
