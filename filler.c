@@ -12,12 +12,12 @@ int module(int number)
 
 int max(int num_1, int num_2)
 {
-	return (num_1 > num_2 ? num_1 : num_2); 
+	return (num_1 > num_2 ? num_1 : num_2);
 }
 
 int min(int num_1, int num_2)
 {
-	return (num_1 < num_2 ? num_1 : num_2); 
+	return (num_1 < num_2 ? num_1 : num_2);
 }
 
 void	fill_weight_enemy(t_board  *board, int re, int ce)
@@ -35,12 +35,12 @@ void	fill_weight_enemy(t_board  *board, int re, int ce)
 		while (c < board->columns)
 		{
 			fresh_weight = max(module(re - r), module(ce - c));
-			board->cells[r * board->columns + c].weight = 
+			board->cells[r * board->columns + c].weight =
 			min(board->cells[r * board->columns + c].weight, fresh_weight);
 			c++;
 		}
 		r++;
-	}	
+	}
 }
 
 void	find_weight_maps(t_filler *state)
@@ -84,6 +84,74 @@ void	create_board(char *str, t_filler *state)
 		state->board.columns) * sizeof(t_cell));
 }
 
+char *control_chars(t_filler *state, int *cross, char *c_on_map, char *figure_c)
+{
+	int rows;
+	int cols;
+	if (figure_c == '*')
+	{
+		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
+			return ("false");
+		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
+		(*cross)++;
+			return ("true");
+	}
+	return ("true");
+}
+
+int	control_position(t_filler *state, int x, int y)
+{
+		int row;
+		int col;
+		int weight;
+		int cross;
+		char *value;
+
+		cross = 0;
+		value = 0;
+		row = -1;
+		while (++row <= state->figure.rows)
+		{
+			col = -1;
+			while (++col <= state->figure.columns)
+			{
+				if (value = control_chars(state, &cross, *state->figure.view, state->board.cells) == "false")
+				{
+						return "false";
+				}
+			}
+		}
+}
+
+t_position decide_position(t_filler *state)
+{
+	int row;
+	int col;
+	int weight_figure;
+	t_position *right_position;
+
+	right_position = (t_position*)malloc(sizeof(t_position));
+	right_position->figure_weight = 2147483647;
+	col = -1;
+	while (++col <= state->board.columns - state->figure.columns)
+	{
+		row = -1;
+		while (++row <= state->board.rows - state->figure.rows)
+		{
+			if (weight_figure == control_position(state, row, col) != -1)
+			{
+				if (right_position->figure_weight > weight_figure)
+				{
+					right_position->x = row;
+					right_position->y = col;
+					right_position->figure_weight = weight_figure;
+				}
+			}
+		}
+	}
+	return (*right_position);
+}
+
 int main(int argc, char **argv)
 {
 	t_filler	state;
@@ -91,7 +159,7 @@ int main(int argc, char **argv)
 	char 		*str;
 	int i = 0;
 
-	
+
 	fptr = fopen("./test.txt","w");
 	(void)argc;
 	ft_bzero(&state, sizeof(state));
@@ -100,10 +168,11 @@ int main(int argc, char **argv)
 	{
 	 	if (state.board.cells == NULL)
 			create_board(str, &state);
-	 	free(str);	
+	 	free(str);
 	 	parse_board(&(state.board));
 	 	parse_figure(&(state.figure));
 	 	find_weight_maps(&(state));
+		decide_position(&(state));
 	 	while(i < state.board.rows * state.board.columns){
 	 		fprintf(fptr, "%3c", state.board.cells[i].symbol);
 	 		i++;

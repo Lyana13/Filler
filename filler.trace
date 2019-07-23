@@ -1,5 +1,4 @@
-seed = 9169
-O: timedout
-./filler_do_not_compile_again won
+seed = 8095
+./players/carli.filler won
 Score:
-0AGAINST0
+0AGAINST165
