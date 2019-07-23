@@ -84,20 +84,20 @@ void	create_board(char *str, t_filler *state)
 		state->board.columns) * sizeof(t_cell));
 }
 
-char *control_chars(t_filler *state, int *cross, char *c_on_map, char *figure_c)
-{
-	int rows;
-	int cols;
-	if (figure_c == '*')
-	{
-		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
-			return ("false");
-		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
-		(*cross)++;
-			return ("true");
-	}
-	return ("true");
-}
+// char *control_chars(t_filler *state, int *cross, char *c_on_map, char *figure_c)
+// {
+// 	int rows;
+// 	int cols;
+// 	if (figure_c == '*')
+// 	{
+// 		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
+// 			return ("false");
+// 		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
+// 		(*cross)++;
+// 			return ("true");
+// 	}
+// 	return ("true");
+// }
 
 int	control_position(t_filler *state, int x, int y)
 {
@@ -115,12 +115,13 @@ int	control_position(t_filler *state, int x, int y)
 			col = -1;
 			while (++col <= state->figure.columns)
 			{
-				if (value = control_chars(state, &cross, *state->figure.view, state->board.cells) == "false")
+				if (value = control_chars(state, &cross, *state->figure.view, state->board.cells) == -1)
 				{
 						return "false";
 				}
 			}
 		}
+		return -1;
 }
 
 t_position decide_position(t_filler *state)
@@ -128,28 +129,27 @@ t_position decide_position(t_filler *state)
 	int row;
 	int col;
 	int weight_figure;
-	t_position *right_position;
+	t_position right_position;
 
-	right_position = (t_position*)malloc(sizeof(t_position));
-	right_position->figure_weight = 2147483647;
+	right_position.figure_weight = 2147483647;
 	col = -1;
-	while (++col <= state->board.columns - state->figure.columns)
+	while (++col <= state->board.columns - state->figure.columns_1)
 	{
 		row = -1;
-		while (++row <= state->board.rows - state->figure.rows)
+		while (++row <= state->board.rows - state->figure.rows_1)
 		{
-			if (weight_figure == control_position(state, row, col) != -1)
+			if ((weight_figure = control_position(state, row, col)) != -1)
 			{
-				if (right_position->figure_weight > weight_figure)
+				if (right_position.figure_weight > weight_figure)
 				{
-					right_position->x = row;
-					right_position->y = col;
-					right_position->figure_weight = weight_figure;
+					right_position.x = row;
+					right_position.y = col;
+					right_position.figure_weight = weight_figure;
 				}
 			}
 		}
 	}
-	return (*right_position);
+	return (right_position);
 }
 
 int main(int argc, char **argv)
@@ -172,7 +172,14 @@ int main(int argc, char **argv)
 	 	parse_board(&(state.board));
 	 	parse_figure(&(state.figure));
 	 	find_weight_maps(&(state));
-		decide_position(&(state));
+		position = decide_position(&(state));
+		while(i < state.board.rows * state.board.columns){
+	 		fprintf(fptr, "figur%d", position.figure_weight);
+	 		i++;
+	 		if (i % state.board.columns == 0)
+	 			fprintf(fptr, "\n");
+	 	}
+	 	i = 0;
 	 	while(i < state.board.rows * state.board.columns){
 	 		fprintf(fptr, "%3c", state.board.cells[i].symbol);
 	 		i++;
