@@ -84,44 +84,50 @@ void	create_board(char *str, t_filler *state)
 		state->board.columns) * sizeof(t_cell));
 }
 
-// char *control_chars(t_filler *state, int *cross, char *c_on_map, char *figure_c)
-// {
-// 	int rows;
-// 	int cols;
-// 	if (figure_c == '*')
-// 	{
-// 		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
-// 			return ("false");
-// 		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
-// 		(*cross)++;
-// 			return ("true");
-// 	}
-// 	return ("true");
-// }
+int overlay_chars(t_filler *state, int *overlay, char c_on_map, char figure_c)
+{
+	int rows;
+	int cols;
+	if (figure_c == '*')
+	{
+		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
+			return (-1);
+		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
+		(*overlay)++;
+			return (1);
+	}
+	return (0);
+}
 
 int	control_position(t_filler *state, int x, int y)
 {
 		int row;
 		int col;
 		int weight;
-		int cross;
-		char *value;
+		int overlay;
+		int value;
 
-		cross = 0;
-		value = 0;
+		overlay = 0;
+		weight = 0;
 		row = -1;
 		while (++row <= state->figure.rows)
 		{
 			col = -1;
 			while (++col <= state->figure.columns)
 			{
-				if (value = control_chars(state, &cross, *state->figure.view, state->board.cells) == -1)
+				if ((value = overlay_chars(state, &overlay, *state->figure.view, state->board.cells->symbol)) == -1)
 				{
-						return "false";
+					return (-1);
 				}
+				else if (value != -1)
+				{
+					return weight += state->board.cells->weight;
+				}
+				if (overlay > 1)
+					return (-1);
 			}
 		}
-		return -1;
+		return ((overlay == 1) ? weight : -1);
 }
 
 t_position decide_position(t_filler *state)
@@ -173,13 +179,9 @@ int main(int argc, char **argv)
 	 	parse_figure(&(state.figure));
 	 	find_weight_maps(&(state));
 		position = decide_position(&(state));
-		while(i < state.board.rows * state.board.columns){
-	 		fprintf(fptr, "figur%d", position.figure_weight);
-	 		i++;
-	 		if (i % state.board.columns == 0)
-	 			fprintf(fptr, "\n");
-	 	}
-	 	i = 0;
+
+	 		fprintf(fptr, "figure %d", position.figure_weight);
+	 		
 	 	while(i < state.board.rows * state.board.columns){
 	 		fprintf(fptr, "%3c", state.board.cells[i].symbol);
 	 		i++;
