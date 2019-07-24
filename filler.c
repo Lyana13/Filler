@@ -27,7 +27,6 @@ void	fill_weight_enemy(t_board  *board, int re, int ce)
 	int fresh_weight;
 
 	board->cells[re * board->columns + ce].weight = 0;
-	fprintf(fptr, "\n\n\nfgfgf\n\n\n\n");
 	r = 0;
 	while (r < board->rows)
 	{
@@ -84,50 +83,36 @@ void	create_board(char *str, t_filler *state)
 		state->board.columns) * sizeof(t_cell));
 }
 
-int overlay_chars(t_filler *state, int *overlay, char c_on_map, char figure_c)
-{
-	int rows;
-	int cols;
-	if (figure_c == '*')
-	{
-		if (c_on_map == state->enemy_player || c_on_map == state->enemy_player + 32)
-			return (-1);
-		else if (figure_c == state->my_player || figure_c == state->my_player + 32)
-		(*overlay)++;
-			return (1);
-	}
-	return (0);
-}
-
 int	control_position(t_filler *state, int x, int y)
 {
-		int row;
-		int col;
-		int weight;
+		int c;
+		int r;
+		t_cell point;
 		int overlay;
-		int value;
+		int figure_weight;
 
+		figure_weight = 0;
+		c = -1;
 		overlay = 0;
-		weight = 0;
-		row = -1;
-		while (++row <= state->figure.rows)
+		while (++c <= state->figure.columns_1)
 		{
-			col = -1;
-			while (++col <= state->figure.columns)
+			r = -1;
+			while (++r <= state->figure.rows_1)
 			{
-				if ((value = overlay_chars(state, &overlay, *state->figure.view, state->board.cells->symbol)) == -1)
+				if (state->figure.view[r * state->figure.columns + c] == '*')
 				{
-					return (-1);
+					point = state->board.cells[(y + r) * state->board.columns + (x + c)];
+					if (point.symbol == state->enemy_player || 
+						point.symbol == state->enemy_player + 32)
+						return -1;
+					else if (point.symbol == state->my_player || 
+						point.symbol == state->my_player + 32)
+						overlay++;
+					figure_weight += point.weight;
 				}
-				else if (value != -1)
-				{
-					return weight += state->board.cells->weight;
-				}
-				if (overlay > 1)
-					return (-1);
 			}
 		}
-		return ((overlay == 1) ? weight : -1);
+	return (overlay == 1 ? figure_weight : -1);
 }
 
 t_position decide_position(t_filler *state)
@@ -164,6 +149,8 @@ int main(int argc, char **argv)
 	t_position	position;
 	char 		*str;
 	int i = 0;
+	char *x;
+	char *y;
 
 
 	fptr = fopen("./test.txt","w");
@@ -179,8 +166,15 @@ int main(int argc, char **argv)
 	 	parse_figure(&(state.figure));
 	 	find_weight_maps(&(state));
 		position = decide_position(&(state));
-
-	 		fprintf(fptr, "figure %d", position.figure_weight);
+		x = ft_itoa(position.x);
+		y = ft_itoa(position.y);
+		write(1, x, ft_strlen(x));
+		write(1, " ", 1);
+		write(1, y, ft_strlen(y));
+		write(1, "\n", 1);
+		free(x);
+		free(y);
+	 		fprintf(fptr, "figure %d\n x %d\n y %d\n", position.figure_weight,position.x, position.y);
 	 		
 	 	while(i < state.board.rows * state.board.columns){
 	 		fprintf(fptr, "%3c", state.board.cells[i].symbol);
@@ -204,8 +198,8 @@ int main(int argc, char **argv)
 	 	}
 	 	free(state.figure.view);
 	}
-	fprintf(fptr, "row:%d, col: %d, dol: %c\n", state.board.rows, state.board.columns, state.board.cells[i].symbol);
-	//free(str);
+	//fprintf(fptr, "row:%d, col: %d, dol: %c\n", state.board.rows, state.board.columns, state.board.cells[i].symbol);
+	free(str);
 	fclose(fptr);
 	return (0);
 }
