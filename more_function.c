@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   more_function.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lmalaya <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 11:05:02 by lmalaya           #+#    #+#             */
-/*   Updated: 2019/07/25 11:05:04 by lmalaya          ###   ########.fr       */
+/*   Created: 2019/07/25 19:38:33 by lmalaya           #+#    #+#             */
+/*   Updated: 2019/07/25 19:38:36 by lmalaya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 32
+#include "filler.h"
 
-# include <stdlib.h>
-# include <fcntl.h>
-# include "libft.h"
-
-typedef struct	s_buff
+int		module(int number)
 {
-	char		*content;
-	char		*pos;
-	int			fd;
-}				t_buff;
+	if (number < 0)
+		return (-number);
+	else
+		return (number);
+}
 
-int				get_next_line(const int fd, char **line);
+int		max(int num_1, int num_2)
+{
+	return (num_1 > num_2 ? num_1 : num_2);
+}
 
-#endif
+int		min(int num_1, int num_2)
+{
+	return (num_1 < num_2 ? num_1 : num_2);
+}

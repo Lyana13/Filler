@@ -1,8 +1,7 @@
-
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
-OBJ	= 
-NAME = libftfiller.a
+OBJ	= filler.o parser.o weight.o more_function.o
+NAME = filler
 
 all: $(NAME)
 
@@ -13,13 +12,7 @@ $(LIBFT):
 	gcc -Wall -Wextra -Werror -c  $< -o $@ -I $(LIBFT_DIR) 
 
 $(NAME): $(OBJ) $(LIBFT)
-	cp $(LIBFT) ./$(NAME)
-	ar rc $(NAME) $(OBJ) $(LIBFT)
-	ranlib $(NAME)
-#	gcc $(OBJ) $(LIBFT) -o $(NAME)
-
-main: $(NAME)
-	gcc main.c $(NAME)
+	gcc $(OBJ) $(LIBFT) -o $(NAME)
 
 clean:
 	rm -f $(OBJ)
